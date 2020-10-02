@@ -6,7 +6,7 @@
 /*   By: peerdb <peerdb@student.codam.nl>             +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/10/02 21:58:28 by peerdb        #+#    #+#                 */
-/*   Updated: 2020/10/02 22:39:57 by peerdb        ########   odam.nl         */
+/*   Updated: 2020/10/02 22:57:19 by peerdb        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ int	get_next_line(int fd, std::string& line)
 	std::string			str;
 	int					ret = 1;
 
-	while (ret >= 0) {
+	while (ret > 0) {
 		str += buf;
 		if (str.find("\n\0") != str.npos) {
 			return (finish(buf, str, line, ret));
