@@ -6,7 +6,7 @@
 /*   By: peerdb <peerdb@student.codam.nl>             +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/10/02 21:58:55 by peerdb        #+#    #+#                 */
-/*   Updated: 2020/10/02 22:38:36 by peerdb        ########   odam.nl         */
+/*   Updated: 2020/10/09 14:46:26 by pde-bakk      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,11 +17,14 @@
 # include <unistd.h>
 # include <fcntl.h>
 # include <stdlib.h>
+# include <map>
 
 # ifndef BUFFER_SIZE
 #  define BUFFER_SIZE 8
 # endif
 
-int	get_next_line(int fd, std::string& line);
+namespace ft {
+	int	get_next_line(int fd, std::string& line);
+}
 
 #endif

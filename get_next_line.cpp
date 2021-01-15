@@ -6,37 +6,43 @@
 /*   By: peerdb <peerdb@student.codam.nl>             +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2020/10/02 21:58:28 by peerdb        #+#    #+#                 */
-/*   Updated: 2020/10/02 22:57:19 by peerdb        ########   odam.nl         */
+/*   Updated: 2020/10/09 14:46:50 by pde-bakk      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.hpp"
 
-int	finish(std::string& buf, std::string& str, std::string& line, int ret)
-{
-	buf = str.substr(str.find_first_of('\n') + 1, str.length() - str.find_first_of('\n') - 1);
-	line = str.substr(0, str.find_first_of('\n'));
-	return (ret > 0);
-}
+namespace ft {
 
-int	get_next_line(int fd, std::string& line)
-{
-	static std::string	buf;
-	std::string			str;
-	int					ret = 1;
-
-	while (ret > 0) {
-		str += buf;
-		if (str.find("\n\0") != str.npos) {
-			return (finish(buf, str, line, ret));
-		}
-		buf.clear();
-		char *tmp = (char*) malloc(BUFFER_SIZE + 1);
-		for (int i = 0; i < BUFFER_SIZE + 1; i++)
-			tmp[i] = 0;
-		ret = read(fd, tmp, BUFFER_SIZE);
-		buf.assign(tmp);
-		free(tmp);
+	static int	finish(std::string& line, int ret, std::string& buf)
+	{
+		buf = line.substr(line.find_first_of('\n') + 1, line.length() - line.find_first_of('\n') - 1);
+		line = line.substr(0, line.find_first_of("\r\n"));
+		return (ret > 0);
 	}
-	return 0;
+
+	int	get_next_line(int fd, std::string& line)
+	{
+		int	ret = 1;
+		static std::map<int, std::string> m; // m[fd] is my buffer string
+
+		line.clear();
+		while (ret > 0) {
+			line += m[fd];
+			if (line.find('\n') != std::string::npos) {
+				return (finish(line, ret, m[fd]));
+			}
+			m[fd].clear();
+			char *tmp = (char*) malloc(BUFFER_SIZE + 1);
+			if (!tmp)
+				return (0);
+			for (int i = 0; i < BUFFER_SIZE + 1; i++)
+				tmp[i] = 0;
+			ret = read(fd, tmp, BUFFER_SIZE);
+			m[fd].assign(tmp);
+			free(tmp);
+		}
+		return 0;
+	}
+
 }
